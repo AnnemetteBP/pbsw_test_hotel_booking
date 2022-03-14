@@ -56,7 +56,7 @@ namespace HotelBooking.UnitTests
 
         // User Story 1 - Case 2
         [Fact]
-        public void FindAvailableRoom_StartDateNotInTheFutureAndEndDateInTheFuture_ArgumentExeption()
+        public void FindAvailableRoom_StartDateNotInTheFutureAndEndDateInTheFuture_ThrowsArgumentExeption()
         {
             // Arrange
             DateTime startDate = DateTime.Today.AddDays(-1);
@@ -134,7 +134,7 @@ namespace HotelBooking.UnitTests
 
         // User Story 1 - Case 8
         [Fact]
-        public void FindAvailableRoom_StartDateInFullyOccupiedAndEndDateBeforeFullyOccupied_RoomIdMinusOne()
+        public void FindAvailableRoom_StartDateInFullyOccupiedAndEndDateAfterFullyOccupied_RoomIdMinusOne()
         {
             // Arrange
             DateTime startDate = DateTime.Today.AddDays(19);
