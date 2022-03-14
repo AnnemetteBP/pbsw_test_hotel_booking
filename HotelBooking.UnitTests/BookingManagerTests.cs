@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
 using Xunit;
@@ -143,6 +144,97 @@ namespace HotelBooking.UnitTests
             int RoomID = bookingManager.FindAvailableRoom(startDate, endDate);
             // Assert
             Assert.Equal(-1, RoomID);
+        }
+
+        // User Story 2 - Case 1
+        [Fact]
+        public void GetFullyOccupiedDates_StartDateIsAfterEndDate_ThrowsAurgumentException()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(-1);
+            DateTime endDate = DateTime.Today.AddDays(-2);
+            // Act
+            Action act = () => bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
+            Assert.Throws<ArgumentException>(act);
+        }
+
+        // User Story 2 - Case 2 (Case 2 from User Story 1 Case 2 is not relevant to this issue, which means this  approach is like User Story 1 Case 3)
+        [Fact]
+        public void GetFullyOccupiedDates_StartDateBeforeFullyOccupiedAndEndDateBeforeFullyOccupied_FullyOccupiedCountIsZero()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(1);
+            DateTime endDate = DateTime.Today.AddDays(2);
+            // Act
+            List<DateTime> FullyOccupiedDates = bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
+            Assert.Empty(FullyOccupiedDates);
+        }
+
+        // User Story 2 - Case 3
+        [Fact]
+        public void GetFullyOccupiedDates_FullyOccupiedDatesAndNoFullyOccupiedDates_FullyOccupiedCountIsNotZero()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(9);
+            DateTime endDate = DateTime.Today.AddDays(21);
+            // Act
+            List<DateTime> FullyOccupiedDates = bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
+            Assert.NotEmpty(FullyOccupiedDates);
+        }
+
+        // User Story 2 - Case 4
+        [Fact]
+        public void GetFullyOccupiedDates_StartDateAfterFullyOccupiedAndEndDateAfterFullyOccupied_FullyOccupiedCountIsZero()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(21);
+            DateTime endDate = DateTime.Today.AddDays(22);
+            // Act
+            List<DateTime> FullyOccupiedDates = bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
+            Assert.Empty(FullyOccupiedDates);
+        }
+
+        // User Story 2 - Case 5
+        [Fact]
+        public void GetFullyOccupiedDates_StartDateBeforeFullyOccupiedAndEndDateInFullyOccupied_FullyOccupiedCountIsNotZero()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(9);
+            DateTime endDate = DateTime.Today.AddDays(11);
+            // Act
+            List<DateTime> FullyOccupiedDates = bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
+            Assert.NotEmpty(FullyOccupiedDates);
+        }
+
+        // User Story 2 - Case 6
+        [Fact]
+        public void GetFullyOccupiedDates_StartDateInFullyOccupiedAndEndDateInFullyOccupied_FullyOccupiedCountIsNotZero()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(11);
+            DateTime endDate = DateTime.Today.AddDays(19);
+            // Act
+            List<DateTime> FullyOccupiedDates = bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
+            Assert.NotEmpty(FullyOccupiedDates);
+        }
+
+        // User Story 2 - Case 7
+        [Fact]
+        public void GetFullyOccupiedDates_StartDateInFullyOccupiedAndEndDateAfterFullyOccupied_FullyOccupiedCountIsNotZero()
+        {
+            // Arrange
+            DateTime startDate = DateTime.Today.AddDays(19);
+            DateTime endDate = DateTime.Today.AddDays(21);
+            // Act
+            List<DateTime> FullyOccupiedDates = bookingManager.GetFullyOccupiedDates(startDate, endDate);
+            // Assert
+            Assert.NotEmpty(FullyOccupiedDates);
         }
     }
 }
