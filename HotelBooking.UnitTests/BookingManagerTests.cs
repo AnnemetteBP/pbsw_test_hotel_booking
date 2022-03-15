@@ -48,6 +48,37 @@ namespace HotelBooking.UnitTests
             // Create RoomsController
             bookingManager = new BookingManager(fakeBookingRepository.Object, fakeRoomRepository.Object);
         }
+        public static IEnumerable<object[]> GetLocalData()
+        {
+            var data = new List<object[]>
+            {
+                // User Story 1 - Case 3
+                new object[] { DateTime.Today.AddDays(1), DateTime.Today.AddDays(2), 1},
+                // User Story 1 - Case 4
+                new object[] { DateTime.Today.AddDays(9), DateTime.Today.AddDays(21), -1},
+                // User Story 1 - Case 5
+                new object[] { DateTime.Today.AddDays(21), DateTime.Today.AddDays(22), 1},
+                // User Story 1 - Case 6
+                new object[] { DateTime.Today.AddDays(9), DateTime.Today.AddDays(11), -1},
+                // User Story 1 - Case 7
+                new object[] { DateTime.Today.AddDays(11), DateTime.Today.AddDays(19), -1},
+                // User Story 1 - Case 8
+                new object[] { DateTime.Today.AddDays(19), DateTime.Today.AddDays(21), -1}
+            };
+            return data;
+        }
+
+        [Theory]
+        [MemberData(nameof(GetLocalData))]
+        public void FindAvailableRoom_ValidMemberData_RoomIdIsCorrect(DateTime startDate, DateTime endDate, int expectedRoomId)
+        {
+            //Arrange
+            bookingManager = new BookingManager(fakeBookingRepository.Object, fakeRoomRepository.Object);
+            //Act
+            int RoomID = bookingManager.FindAvailableRoom(startDate, endDate);
+            //Assert
+            Assert.Equal(expectedRoomId, RoomID);
+        }
 
         // Unit tests
         [Fact]
