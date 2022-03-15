@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using HotelBooking.Core;
 using HotelBooking.UnitTests.Fakes;
+using Moq;
 using Xunit;
 
 namespace HotelBooking.UnitTests
@@ -9,15 +10,46 @@ namespace HotelBooking.UnitTests
     public class BookingManagerTests
     {
         private IBookingManager bookingManager;
+        private Mock<IRepository<Booking>> fakeBookingRepository;
+        private Mock<IRepository<Room>> fakeRoomRepository;
 
-        public BookingManagerTests(){
-            DateTime start = DateTime.Today.AddDays(10);
-            DateTime end = DateTime.Today.AddDays(20);
-            IRepository<Booking> bookingRepository = new FakeBookingRepository(start, end);
-            IRepository<Room> roomRepository = new FakeRoomRepository();
-            bookingManager = new BookingManager(bookingRepository, roomRepository);
+        public BookingManagerTests()
+        {
+            var fullyOccupiedStartDate = DateTime.Today.AddDays(10);
+            var fullyOccupiedEndDate = DateTime.Today.AddDays(20);
+
+            //DateTime start = DateTime.Today.AddDays(10);
+            //DateTime end = DateTime.Today.AddDays(20);
+            //IRepository<Booking> bookingRepository = new FakeBookingRepository(start, end);
+            //IRepository<Room> roomRepository = new FakeRoomRepository();
+            //bookingManager = new BookingManager(bookingRepository, roomRepository);
+
+            //Moq needed lists
+            var bookings = new List<Booking>
+                {
+                    new Booking { Id=1, StartDate=fullyOccupiedStartDate, EndDate=fullyOccupiedEndDate, IsActive=true, CustomerId=1, RoomId=1 },
+                    new Booking { Id=2, StartDate=fullyOccupiedStartDate, EndDate=fullyOccupiedEndDate, IsActive=true, CustomerId=2, RoomId=2 }
+                };
+
+            var rooms = new List<Room>
+            {
+                new Room { Id=1, Description="A" },
+                new Room { Id=2, Description="B" },
+            };
+
+            // Create fake BookingRepository. 
+            fakeBookingRepository = new Mock<IRepository<Booking>>();
+            fakeRoomRepository = new Mock<IRepository<Room>>();
+
+            // Implement fake GetAll() method.
+            fakeBookingRepository.Setup(x => x.GetAll()).Returns(bookings);
+            fakeRoomRepository.Setup(x => x.GetAll()).Returns(rooms);
+
+            // Create RoomsController
+            bookingManager = new BookingManager(fakeBookingRepository.Object, fakeRoomRepository.Object);
         }
 
+        // Unit tests
         [Fact]
         public void FindAvailableRoom_StartDateNotInTheFuture_ThrowsArgumentException()
         {
@@ -67,7 +99,6 @@ namespace HotelBooking.UnitTests
             // Assert
             Assert.Throws<ArgumentException>(act);
         }
-
         // User Story 1 - Case 3
         [Fact]
         public void FindAvailableRoom_StartDateInTheFutureAndEndDateInTheFuture_RoomIdNotMinusOne()
