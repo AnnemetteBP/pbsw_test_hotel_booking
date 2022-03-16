@@ -45,7 +45,7 @@ namespace HotelBooking.UnitTests
             fakeBookingRepository.Setup(x => x.GetAll()).Returns(bookings);
             fakeRoomRepository.Setup(x => x.GetAll()).Returns(rooms);
 
-            // Create RoomsController
+            // Create BookingManager
             bookingManager = new BookingManager(fakeBookingRepository.Object, fakeRoomRepository.Object);
         }
         public static IEnumerable<object[]> GetLocalData()
@@ -72,8 +72,6 @@ namespace HotelBooking.UnitTests
         [MemberData(nameof(GetLocalData))]
         public void FindAvailableRoom_ValidMemberData_RoomIdIsCorrect(DateTime startDate, DateTime endDate, int expectedRoomId)
         {
-            //Arrange
-            bookingManager = new BookingManager(fakeBookingRepository.Object, fakeRoomRepository.Object);
             //Act
             int RoomID = bookingManager.FindAvailableRoom(startDate, endDate);
             //Assert
