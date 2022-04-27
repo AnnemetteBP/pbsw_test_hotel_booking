@@ -35,8 +35,8 @@ namespace BlackBoxTesting.Features
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "CreateBooking", "\tIn order to book a room\r\n\tAs a booking manager\r\n\tI want to book an available roo" +
-                    "m from a given start date to end date", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "CreateBooking", "In order to acommodation during my trip a room\r\nAs a customer\r\nI want to be able " +
+                    "to book a room", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -75,15 +75,31 @@ namespace BlackBoxTesting.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Create booking")]
+        [NUnit.Framework.DescriptionAttribute("Create a booking")]
         [NUnit.Framework.CategoryAttribute("mytag")]
-        public void CreateBooking()
+        [NUnit.Framework.TestCaseAttribute("1", "1", "true", null)]
+        [NUnit.Framework.TestCaseAttribute("2", "2", "true", null)]
+        [NUnit.Framework.TestCaseAttribute("9", "9", "true", null)]
+        [NUnit.Framework.TestCaseAttribute("21", "21", "true", null)]
+        [NUnit.Framework.TestCaseAttribute("22", "22", "true", null)]
+        [NUnit.Framework.TestCaseAttribute("11", "11", "false", null)]
+        [NUnit.Framework.TestCaseAttribute("15", "15", "false", null)]
+        [NUnit.Framework.TestCaseAttribute("19", "19", "false", null)]
+        public void CreateABooking(string start, string end, string created, string[] exampleTags)
         {
-            string[] tagsOfScenario = new string[] {
+            string[] @__tags = new string[] {
                     "mytag"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create booking", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 6
+            argumentsOfScenario.Add("start", start);
+            argumentsOfScenario.Add("end", end);
+            argumentsOfScenario.Add("created", created);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a booking", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 9
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -93,42 +109,17 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                            "StartDate",
-                            "EndDate",
-                            "IsActive"});
-                table1.AddRow(new string[] {
-                            "1",
-                            "2",
-                            "true"});
-                table1.AddRow(new string[] {
-                            "9",
-                            "21",
-                            "false"});
-                table1.AddRow(new string[] {
-                            "21",
-                            "22",
-                            "true"});
-                table1.AddRow(new string[] {
-                            "9",
-                            "11",
-                            "false"});
-                table1.AddRow(new string[] {
-                            "11",
-                            "19",
-                            "false"});
-                table1.AddRow(new string[] {
-                            "19",
-                            "21",
-                            "false"});
-#line 7
- testRunner.Given("I as a Booking Manager have a list of bookings", ((string)(null)), table1, "Given ");
+#line 10
+    testRunner.Given(string.Format("I have entered a start date in {0} days", start), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 15
- testRunner.When("I press Create booking", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 11
+    testRunner.And(string.Format("I have entered an end date in {0} days", end), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 16
- testRunner.Then("the booking is <IsActive>", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 12
+    testRunner.When("I press Create New Booking", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 13
+    testRunner.Then(string.Format("The result should be {0}", created), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
